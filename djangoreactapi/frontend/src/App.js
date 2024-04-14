@@ -3,12 +3,20 @@ import "./App.css";
 import MapComponent from "./MapComponent";
 
 const App = () => {
-  // const [businesses, setBusinesses] = useState([]);
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/api/businesses").then((response) => {
-  //     console.log(response.json());
-  //   });
-  // }, []);
+  const [businesses, setBusinesses] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8000/api/businesses")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data && data.businesses) {
+          console.log(data.businesses);
+        }
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
+  }, []);
 
   // return <div></div>;
   return (

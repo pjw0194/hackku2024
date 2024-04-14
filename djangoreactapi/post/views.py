@@ -28,6 +28,10 @@ def businesses(request):
 
     return JsonResponse(data)
 
+@api_view(['GET'])
+def maps(request):
+    MAP_API_KEY = settings.MAP_API_KEY
+
 class ListPost(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
