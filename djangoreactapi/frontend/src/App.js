@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import MapComponent from "./MapComponent";
 
 const App = () => {
   // const [businesses, setBusinesses] = useState([]);
@@ -43,6 +44,7 @@ const App = () => {
           <br />
           Start exploring now!
         </div>
+        <MapComponent />
       </header>
     </div>
   );
