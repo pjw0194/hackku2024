@@ -1,6 +1,11 @@
 /* 기존 스타일 유지 */
 body {
   font-family: "Times New Roman", Times, serif;
+  margin: 0; /* 여백 제거 */
+  padding: 0; /* 패딩 제거 */
+  width: 100%; /* 너비를 화면 전체로 설정 */
+  height: 100%; /* 높이를 화면 전체로 설정 */
+  background-color: skyblue; /* 배경색을 하늘색으로 설정 */
 }
 
 .App {
