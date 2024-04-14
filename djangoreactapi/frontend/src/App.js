@@ -3,12 +3,25 @@ import "./App.css";
 import MapComponent from "./MapComponent";
 
 const App = () => {
-  // const [businesses, setBusinesses] = useState([]);
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/api/businesses").then((response) => {
-  //     console.log(response.json());
-  //   });
-  // }, []);
+  const [businesses, setBusinesses] = useState([]);
+  const [coordinates, setCoordinates] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8000/api/businesses")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && data.businesses) {
+          const extractCoordinates = data.businesses.map(
+            (business) => business.coordinates
+          );
+          setCoordinates(extractCoordinates);
+        }
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
+  }, []);
+
+  console.log(coordinates);
 
   // return <div></div>;
   return (
