@@ -34,7 +34,7 @@ function MapComponent() {
   return (
     <div
       id="myMap"
-      style={{ position: "relative", width: "1000px", height: "500px" }}
+      style={{ position: "relative", width: "800px", height: "600px" }}
     ></div>
   );
 }
