@@ -2,18 +2,11 @@ import React, { useEffect } from "react";
 
 function MapComponent({ locations }) {
   useEffect(() => {
-    console.log(locations);
-    // 지도 로딩 시나리오 함수 정의
-    if (!window.loadMapScenario) {
-      window.loadMapScenario = function () {
+    const loadMapScenario = () => {
+      if (window.Microsoft && window.Microsoft.Maps) {
         var map = new window.Microsoft.Maps.Map(
           document.getElementById("myMap"),
-          {
-            credentials:
-              "ArT-C0vh0XjKS-ED1MLpcfBoxza_5KOS1256vRj6eZd30BYVp9dGbpGgvJYI5nGX",
-            center: new window.Microsoft.Maps.Location(47.6062, -122.3321),
-            zoom: 10,
-          }
+          {}
         );
 
         locations.forEach((location) => {
@@ -25,31 +18,41 @@ function MapComponent({ locations }) {
           map.entities.push(pin);
         });
 
-        // 지도 클릭 이벤트 리스너 추가
         window.Microsoft.Maps.Events.addHandler(map, "click", function (e) {
           var point = new window.Microsoft.Maps.Point(e.getX(), e.getY());
           var loc = e.target.tryPixelToLocation(point);
           var pin = new window.Microsoft.Maps.Pushpin(loc);
           map.entities.push(pin);
-          alert(`latitude: ${loc.latitude}, longitude: ${loc.longitude}`);
+          const url = `http://localhost:8000/api/businesses?latitude=${loc.latitude}&longitude=${loc.longitude}`;
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error("Error:", error));
         });
-      };
-    }
+      } else {
+        console.error("Bing Maps API not loaded.");
+      }
+    };
 
     if (
       !document.querySelector('script[src*="bing.com/api/maps/mapcontrol"]')
     ) {
       const script = document.createElement("script");
-      script.src = `https://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario&key=ArT-C0vh0XjKS-ED1MLpcfBoxza_5KOS1256vRj6eZd30BYVp9dGbpGgvJYI5nGX&mkt=en-US`;
+      script.src =
+        "https://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario&key=ArT-C0vh0XjKS-ED1MLpcfBoxza_5KOS1256vRj6eZd30BYVp9dGbpGgvJYI5nGX&mkt=en-US";
       script.async = true;
       document.body.appendChild(script);
+    } else {
+      // Ensure that the callback is attached to window object
+      window.loadMapScenario = loadMapScenario;
+      loadMapScenario(); // Call it directly if the script is already loaded
     }
   }, [locations]);
 
   return (
     <div
       id="myMap"
-      style={{ position: "relative", width: "800px", height: "600px" }}
+      style={{ position: "relative", width: "1000px", height: "500px" }}
     ></div>
   );
 }

@@ -7,18 +7,22 @@ from .serializers import PostSerializer
 from django.http import JsonResponse
 
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 import requests, json
 
 @api_view(['GET'])
 def businesses(request):
     API_KEY = settings.API_KEY
+    latitude = request.query_params.get('latitude')
+    longitude = request.query_params.get('longitude')
     url = 'https://api.yelp.com/v3/businesses/search'
     headers = {
         'Authorization': f'Bearer {API_KEY}',
     }
     params = {
-        'location': 'NYC',
+        'latitude': latitude,
+        'longitude': longitude,
         'sort_by': 'best_match',
         'limit': 20
     }
