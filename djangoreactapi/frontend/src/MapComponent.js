@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 function MapComponent({ locations }) {
   useEffect(() => {
+    console.log(locations);
     // 지도 로딩 시나리오 함수 정의
     if (!window.loadMapScenario) {
       window.loadMapScenario = function () {
@@ -15,14 +16,14 @@ function MapComponent({ locations }) {
           }
         );
 
-        // locations.forEach((location) => {
-        //   var loc = new window.Microsoft.Maps.Location(
-        //     location.latitude,
-        //     location.longitude
-        //   );
-        //   var pin = new window.Microsoft.Maps.Pushpin(loc);
-        //   map.entities.push(pin);
-        // });
+        locations.forEach((location) => {
+          var loc = new window.Microsoft.Maps.Location(
+            location.latitude,
+            location.longitude
+          );
+          var pin = new window.Microsoft.Maps.Pushpin(loc);
+          map.entities.push(pin);
+        });
 
         // 지도 클릭 이벤트 리스너 추가
         window.Microsoft.Maps.Events.addHandler(map, "click", function (e) {
@@ -43,7 +44,7 @@ function MapComponent({ locations }) {
       script.async = true;
       document.body.appendChild(script);
     }
-  }, []);
+  }, [locations]);
 
   return (
     <div

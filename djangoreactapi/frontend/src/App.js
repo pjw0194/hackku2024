@@ -20,9 +20,6 @@ const App = () => {
         console.error("Error", error);
       });
   }, []);
-
-  console.log(coordinates);
-
   // return <div></div>;
   return (
     <div className="App">
@@ -57,7 +54,7 @@ const App = () => {
           <br />
           Start exploring now!
         </div>
-        <MapComponent />
+        <MapComponent locations={coordinates} />
       </header>
     </div>
   );
