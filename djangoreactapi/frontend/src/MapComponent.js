@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function MapComponent({ locations }) {
+  const [coordinates, setCoordinates] = useState([]);
   useEffect(() => {
     const loadMapScenario = () => {
       if (window.Microsoft && window.Microsoft.Maps) {
@@ -8,15 +9,6 @@ function MapComponent({ locations }) {
           document.getElementById("myMap"),
           {}
         );
-
-        locations.forEach((location) => {
-          var loc = new window.Microsoft.Maps.Location(
-            location.latitude,
-            location.longitude
-          );
-          var pin = new window.Microsoft.Maps.Pushpin(loc);
-          map.entities.push(pin);
-        });
 
         window.Microsoft.Maps.Events.addHandler(map, "click", function (e) {
           var point = new window.Microsoft.Maps.Point(e.getX(), e.getY());
@@ -26,13 +18,31 @@ function MapComponent({ locations }) {
           const url = `http://localhost:8000/api/businesses?latitude=${loc.latitude}&longitude=${loc.longitude}`;
           fetch(url)
             .then((response) => response.json())
-            .then((data) => console.log(data))
+            .then((data) => {
+              if (data && data.businesses) {
+                const extractCoordinates = data.businesses.map(
+                  (business) => business.coordinates
+                );
+                setCoordinates(extractCoordinates);
+              }
+            })
             .catch((error) => console.error("Error:", error));
+        });
+
+        coordinates.forEach((location) => {
+          var loc = new window.Microsoft.Maps.Location(
+            location.latitude,
+            location.longitude
+          );
+          var pin = new window.Microsoft.Maps.Pushpin(loc);
+          map.entities.push(pin);
         });
       } else {
         console.error("Bing Maps API not loaded.");
       }
     };
+
+    console.log(coordinates);
 
     if (
       !document.querySelector('script[src*="bing.com/api/maps/mapcontrol"]')
@@ -47,7 +57,7 @@ function MapComponent({ locations }) {
       window.loadMapScenario = loadMapScenario;
       loadMapScenario(); // Call it directly if the script is already loaded
     }
-  }, [locations]);
+  }, [coordinates]);
 
   return (
     <div
